@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Terraria;
 using TerrariaApi.Server;
+using TShockAPI;
 
 [ApiVersion(2, 1)]
 public class BlockingSpamByUserPackets : TerrariaPlugin
@@ -36,7 +37,8 @@ public class BlockingSpamByUserPackets : TerrariaPlugin
             args.Handled = true;
             return;
         }
-        Packets[args.Msg.whoAmI]++;
+        if (!TShock.Players[args.Msg.whoAmI].HasPermission("blockpacketspam"))
+            Packets[args.Msg.whoAmI]++;
     }
 
     DateTime lastUpdate = DateTime.Now;

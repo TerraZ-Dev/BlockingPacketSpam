@@ -30,7 +30,8 @@ public class BlockingSpamByUserPackets : TerrariaPlugin
     {
         if (Netplay.Clients[args.Msg.whoAmI].State != 10)
             return;
-        if (args.MsgID == PacketTypes.LoadNetModule)
+        if (args.MsgID == PacketTypes.LoadNetModule || args.MsgID == PacketTypes.Tile 
+            || args.MsgID == PacketTypes.PaintTile || args.MsgID == PacketTypes.PaintWall)
             return;
         if (BlockedPlayers[args.Msg.whoAmI])
         {
@@ -38,7 +39,12 @@ public class BlockingSpamByUserPackets : TerrariaPlugin
             return;
         }
         if (!TShock.Players[args.Msg.whoAmI].HasPermission("blockpacketspam"))
-            Packets[args.Msg.whoAmI]++;
+        {
+            if (args.MsgID == PacketTypes.HitSwitch)
+                Packets[args.Msg.whoAmI] += 5;
+            else
+                Packets[args.Msg.whoAmI]++;
+        }
     }
 
     DateTime lastUpdate = DateTime.Now;
